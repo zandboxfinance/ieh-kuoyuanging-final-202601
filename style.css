@@ -1,0 +1,192 @@
+:root {
+    --p: #00a2ff;
+    --d: #ff4757;
+    --s: #2ed573;
+    --bg: #0a0a0a;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-box {
+    position: relative;
+    width: 1000px;
+    height: 650px;
+    background: radial-gradient(circle, #1a1a1a, #000);
+    border: 4px solid #333;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* HUD 介面 */
+.hud {
+    position: absolute;
+    top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    z-index: 50;
+}
+
+.hp-section { text-align: center; }
+
+.hp-wrap {
+    width: 320px;
+    height: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.hp-bar {
+    height: 100%;
+    width: 100%;
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#p-bar { background: linear-gradient(90deg, #0062ff, var(--p)); box-shadow: 0 0 20px var(--p); }
+#a-bar { background: linear-gradient(90deg, #ff0000, var(--d)); box-shadow: 0 0 20px var(--d); }
+
+/* 角色與槍枝 */
+.char {
+    position: absolute;
+    border-radius: 6px;
+    z-index: 5;
+    transition: transform 0.1s;
+    border: 3px solid #fff;
+    box-sizing: border-box;
+}
+
+.gun {
+    position: absolute;
+    height: 10px;
+    background: #222;
+    border: 1.5px solid #888;
+    transform-origin: left center;
+    border-radius: 3px;
+}
+
+#player { width: 46px; height: 46px; background: var(--p); }
+#player-gun { width: 42px; left: 23px; top: 18px; display: none; }
+
+#ai { width: 46px; height: 46px; background: var(--d); display: none; }
+#ai-gun { width: 42px; left: 23px; top: 18px; }
+
+/* 特效 */
+.bullet {
+    position: absolute;
+    height: 3px;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 6;
+    transform-origin: left center;
+}
+
+.dmg-popup {
+    position: absolute;
+    color: #fff700;
+    font-weight: 900;
+    font-size: 28px;
+    pointer-events: none;
+    animation: popMove 0.5s ease-out forwards;
+    text-shadow: 2px 2px #000;
+}
+
+@keyframes popMove {
+    0% { opacity: 1; transform: scale(0.5) translateY(0); }
+    100% { opacity: 0; transform: scale(1.2) translateY(-60px); }
+}
+
+#flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 60;
+}
+
+/* 選單 */
+#overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+}
+
+.menu-content { text-align: center; }
+.highlight { color: var(--p); }
+
+.mode-container {
+    display: flex;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.mode-btn {
+    background: transparent;
+    color: white;
+    border: 2px solid #555;
+    padding: 15px 25px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.mode-btn:hover, .mode-btn.active {
+    background: white;
+    color: black;
+    transform: scale(1.05);
+}
+
+.start-btn {
+    background: var(--s);
+    padding: 18px 70px;
+    font-size: 24px;
+    border: none;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 900;
+}
+#game-box {
+    position: relative;
+    width: 800px;  /* 縮小寬度 */
+    height: 500px; /* 縮小高度 */
+    background: radial-gradient(circle, #1a1a1a, #000);
+    border: 4px solid #333;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* HUD 介面調整 */
+.hp-wrap {
+    width: 250px;  /* 縮小血條長度 */
+    height: 12px;  /* 稍微變薄 */
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.hud {
+    top: 20px;     /* 往上移一點 */
+    gap: 40px;     /* 間距縮小 */
+}

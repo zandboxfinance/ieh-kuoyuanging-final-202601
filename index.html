@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rivals Pro - Modular Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-box">
+        <div id="flash"></div>
+
+        <div class="hud">
+            <div class="hp-section">
+                <div class="hp-wrap"><div id="p-bar" class="hp-bar"></div></div>
+                <small>YOU (WASD + 1)</small>
+            </div>
+            <div class="hp-section">
+                <div class="hp-wrap"><div id="a-bar" class="hp-bar"></div></div>
+                <small id="ai-label">AI RIVAL</small>
+            </div>
+        </div>
+
+        <div id="player" class="char">
+            <div id="player-gun" class="gun"></div>
+        </div>
+        
+        <div id="ai" class="char">
+            <div id="ai-gun" class="gun"></div>
+        </div>
+
+        <div id="overlay">
+            <div class="menu-content">
+                <h1>RIVALS <span class="highlight">1V1</span></h1>
+                <p>選擇你的訓練模式：</p>
+                <div class="mode-container">
+                    <button class="mode-btn" onclick="setMode('步槍', 600, 15, this)">自動步槍</button>
+                    <button class="mode-btn" onclick="setMode('散彈', 1200, 45, this)">散彈槍</button>
+                    <button class="mode-btn" onclick="setMode('狙擊', 1500, 90, this)">狙擊槍</button>
+                </div>
+                <button class="start-btn" id="s-btn" style="display:none;" onclick="initGame()">ENTER COMBAT</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
