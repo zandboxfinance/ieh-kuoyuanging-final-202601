@@ -1,23 +1,15 @@
-// --- 音效模組：加入安全檢查與狀態恢復 ---
+// --- 音效模組 ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
 function playSnd(freq, type, duration, vol) {
-    // 如果 AudioContext 沒啟動或出錯，不執行音效但不中斷程式
-    try {
-        if (audioCtx.state === 'suspended') return; 
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + duration);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + duration);
-    } catch (e) {
-        console.warn("Audio blocked or failed.");
-    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
 }
 
 // --- 變數與狀態 ---
@@ -52,25 +44,14 @@ function setMode(n, s, d, btn) {
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('s-btn').style.display = 'block';
-    
-    // 嘗試在選擇模式時就喚醒音效引擎
-    if (audioCtx.state === 'suspended') audioCtx.resume();
     playSnd(600, 'sine', 0.1, 0.2);
 }
 
 function initGame() {
-    // 關鍵修復：在點擊 Start 按鈕時強制啟動音效環境
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
     pHP = 100; aHP = 100;
     document.getElementById('overlay').style.display = 'none';
     state = 'PLAY'; 
     a.style.display = 'block';
-    
-    // 自動幫玩家拿槍 (避免玩家沒按 1 導致無法攻擊)
-    isArmed = true; 
-    pG.style.display = 'block';
-
     updateHUD(); 
     gameLoop(); 
     startAI();
@@ -79,12 +60,12 @@ function initGame() {
 function gameLoop() {
     if (state !== 'PLAY') return;
 
-    // 1. 玩家移動
+    // 1. 玩家移動 (WASD)
     let tilt = 0;
     if (keys['a'] && pX > 10) { pX -= 6; tilt = -8; }
-    if (keys['d'] && pX < 740) { pX += 6; tilt = 8; } // 修正邊界以符合 800px 寬度
+    if (keys['d'] && pX < 940) { pX += 6; tilt = 8; }
     if (keys['w'] && pY > 100) pY -= 6;
-    if (keys['s'] && pY < 440) pY += 6; // 修正邊界以符合 500px 高度
+    if (keys['s'] && pY < 590) pY += 6;
     p.style.left = pX + 'px'; 
     p.style.top = pY + 'px';
     p.style.transform = `rotate(${tilt}deg)`;
@@ -95,7 +76,7 @@ function gameLoop() {
         pG.style.transform = `rotate(${angle}rad)`;
     }
 
-    // 3. AI 移動
+    // 3. AI 移動與追蹤瞄準
     aX += Math.sin(Date.now() / 400) * 8;
     a.style.left = aX + 'px'; 
     a.style.top = aY + 'px';
@@ -117,17 +98,12 @@ function startAI() {
     }, config.s);
 }
 
-// 攻擊點擊事件優化
-box.onmousedown = (e) => {
+box.onmousedown = () => {
     if (state !== 'PLAY' || !isArmed) return;
-
-    // 1. 優先處理視覺效果 (確保點擊必有反應)
+    playSnd(800, 'sawtooth', 0.1, 0.2);
     drawBullet(pX+23, pY+23, mX, mY, '#fff700');
     
-    // 2. 處理音效
-    playSnd(800, 'sawtooth', 0.1, 0.2);
-    
-    // 3. 判定擊中 AI
+    // 判定擊中 AI
     if (mX >= aX && mX <= aX+46 && mY >= aY && mY <= aY+46) {
         aHP -= 20; 
         updateHUD();
@@ -178,3 +154,6 @@ function finish(win) {
     h1.style.color = win ? "var(--s)" : "var(--d)";
     playSnd(win ? 1000 : 200, 'sine', 0.5, 0.3);
 }
+
+
+
